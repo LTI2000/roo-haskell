@@ -1,0 +1,46 @@
+cabal-version:      2.4
+name:               roo-haskell
+version:            0.1.0.0
+synopsis:           A list utility library demonstrating filter, map, and fold patterns
+description:        A Haskell library providing safe list operations and common list
+                    manipulation functions with comprehensive test coverage using
+                    HSpec and QuickCheck.
+license:            MIT
+author:             Roo
+maintainer:         roo@example.com
+category:           Data
+build-type:         Simple
+extra-doc-files:    README.md
+
+common warnings
+    ghc-options: -Wall
+
+library
+    import:           warnings
+    exposed-modules:  ListUtils
+    build-depends:    base >= 4.7 && < 5
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+executable roo-haskell-exe
+    import:           warnings
+    main-is:          Main.hs
+    build-depends:
+        base >= 4.7 && < 5,
+        roo-haskell
+    hs-source-dirs:   app
+    default-language: Haskell2010
+
+test-suite roo-haskell-test
+    import:           warnings
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    ListUtilsSpec
+    build-depends:
+        base >= 4.7 && < 5,
+        roo-haskell,
+        hspec >= 2.0,
+        QuickCheck >= 2.0
+    build-tool-depends: hspec-discover:hspec-discover >= 2.0
+    hs-source-dirs:   test
+    default-language: Haskell2010
