@@ -2,21 +2,53 @@
 
 {-# LANGUAGE OverloadedStrings #-}
 
--- | Contains the default configuration
-module OpenAI.Generated.Configuration where
+-- | Contains the default configuration and base URLs for OpenAI-compatible endpoints
+module OpenAI.Generated.Configuration
+  ( -- * Default Base URLs
+    defaultURL
+  , openAIBaseURL
+  , ollamaBaseURL
+  , lmStudioBaseURL
+    -- * Default Configuration
+  , defaultApplicationName
+  , defaultConfiguration
+  ) where
 
 import qualified Data.Text
 import qualified Data.Text as Data.Text.Internal
-import qualified GHC.Types 
+import qualified GHC.Types
 import qualified OpenAI.Generated.Common
 
 -- | The default url specified by the OpenAPI specification
--- 
+--
 -- @https://api.openai.com@
+defaultURL :: Data.Text.Text
 defaultURL = Data.Text.Internal.pack "https://api.openai.com"
+
+-- | OpenAI API base URL
+--
+-- @https://api.openai.com@
+openAIBaseURL :: Data.Text.Text
+openAIBaseURL = Data.Text.Internal.pack "https://api.openai.com"
+
+-- | Ollama local server base URL
+--
+-- @http://localhost:11434@
+ollamaBaseURL :: Data.Text.Text
+ollamaBaseURL = Data.Text.Internal.pack "http://localhost:11434"
+
+-- | LM Studio local server base URL
+--
+-- @http://localhost:1234@
+lmStudioBaseURL :: Data.Text.Text
+lmStudioBaseURL = Data.Text.Internal.pack "http://localhost:1234"
+
 -- | The default application name used in the @User-Agent@ header which is based on the @info.title@ field of the specification
--- 
+--
 -- @OpenAI Chat Completions API@
+defaultApplicationName :: Data.Text.Text
 defaultApplicationName = Data.Text.Internal.pack "OpenAI Chat Completions API"
+
 -- | The default configuration containing the 'defaultURL' and no authorization
+defaultConfiguration :: OpenAI.Generated.Common.Configuration
 defaultConfiguration = OpenAI.Generated.Common.Configuration defaultURL OpenAI.Generated.Common.anonymousSecurityScheme GHC.Types.True defaultApplicationName
