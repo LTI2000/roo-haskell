@@ -1,10 +1,11 @@
 cabal-version:      3.8
 name:               roo-haskell
 version:            0.1.0.0
-synopsis:           A list utility library demonstrating filter, map, and fold patterns
+synopsis:           A list utility library with OpenAI-compatible API client
 description:        A Haskell library providing safe list operations and common list
                     manipulation functions with comprehensive test coverage using
-                    HSpec and QuickCheck.
+                    HSpec and QuickCheck. Also includes a client for OpenAI-compatible
+                    chat completion APIs.
 license:            MIT
 author:             Roo
 maintainer:         roo@example.com
@@ -17,8 +18,41 @@ common warnings
 
 library
     import:           warnings
-    exposed-modules:  ListUtils
-    build-depends:    base >= 4.7 && < 5
+    exposed-modules:  
+        ListUtils
+        OpenAI.Client
+        OpenAI.Generated
+        OpenAI.Generated.Common
+        OpenAI.Generated.Configuration
+        OpenAI.Generated.SecuritySchemes
+        OpenAI.Generated.TypeAlias
+        OpenAI.Generated.Types
+        OpenAI.Generated.Operations.CreateChatCompletion
+        OpenAI.Generated.Types.ChatCompletionRequest
+        OpenAI.Generated.Types.ChatCompletionResponse
+        OpenAI.Generated.Types.ChatMessage
+        OpenAI.Generated.Types.Choice
+        OpenAI.Generated.Types.Usage
+    build-depends:    
+        base >= 4.7 && < 5,
+        -- JSON serialization
+        aeson >= 2.0 && < 3,
+        -- HTTP client
+        http-client >= 0.7 && < 1,
+        http-client-tls >= 0.3 && < 1,
+        http-conduit >= 2.3 && < 3,
+        http-types >= 0.12 && < 1,
+        -- Text and binary handling
+        text >= 1.2 && < 3,
+        bytestring >= 0.10 && < 1,
+        -- Additional dependencies for generated code
+        ghc-prim,
+        unordered-containers >= 0.2 && < 1,
+        vector >= 0.12 && < 1,
+        scientific >= 0.3 && < 1,
+        time >= 1.9 && < 2,
+        mtl >= 2.2 && < 3,
+        transformers >= 0.5 && < 1
     hs-source-dirs:   src
     default-language: Haskell2010
 
@@ -35,12 +69,15 @@ test-suite roo-haskell-test
     import:           warnings
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs
-    other-modules:    ListUtilsSpec
+    other-modules:    
+        ListUtilsSpec
+        OpenAIClientSpec
     build-depends:
         base >= 4.7 && < 5,
         roo-haskell,
         hspec >= 2.0,
-        QuickCheck >= 2.0
+        QuickCheck >= 2.0,
+        text >= 1.2 && < 3
     build-tool-depends: hspec-discover:hspec-discover >= 2.0
     hs-source-dirs:   test
     default-language: Haskell2010

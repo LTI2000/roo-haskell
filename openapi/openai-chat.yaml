@@ -1,0 +1,167 @@
+openapi: 3.0.3
+info:
+  title: OpenAI Chat Completions API
+  version: 1.0.0
+  description: |
+    Minimal OpenAI-compatible chat completions API specification.
+    This spec is designed to work with OpenAI's API as well as compatible
+    endpoints like Ollama, LM Studio, vLLM, and others.
+
+servers:
+  - url: https://api.openai.com
+    description: OpenAI API (default)
+  - url: http://localhost:11434
+    description: Ollama (local)
+  - url: http://localhost:1234
+    description: LM Studio (local)
+
+paths:
+  /v1/chat/completions:
+    post:
+      operationId: createChatCompletion
+      summary: Create a chat completion
+      description: |
+        Creates a model response for the given chat conversation.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatCompletionRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatCompletionResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized - Invalid or missing API key
+        '429':
+          description: Rate limit exceeded
+        '500':
+          description: Internal server error
+      security:
+        - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API key for authentication (Bearer token)
+
+  schemas:
+    ChatCompletionRequest:
+      type: object
+      required:
+        - model
+        - messages
+      properties:
+        model:
+          type: string
+          description: ID of the model to use (e.g., "gpt-3.5-turbo", "gpt-4")
+          example: "gpt-3.5-turbo"
+        messages:
+          type: array
+          description: A list of messages comprising the conversation so far
+          items:
+            $ref: '#/components/schemas/ChatMessage'
+          minItems: 1
+        temperature:
+          type: number
+          description: Sampling temperature between 0 and 2
+          minimum: 0
+          maximum: 2
+          default: 1
+        max_tokens:
+          type: integer
+          description: Maximum number of tokens to generate
+          minimum: 1
+        stream:
+          type: boolean
+          description: Whether to stream partial message deltas
+          default: false
+
+    ChatMessage:
+      type: object
+      required:
+        - role
+        - content
+      properties:
+        role:
+          type: string
+          description: The role of the message author
+          enum:
+            - system
+            - user
+            - assistant
+        content:
+          type: string
+          description: The content of the message
+
+    ChatCompletionResponse:
+      type: object
+      required:
+        - id
+        - object
+        - created
+        - model
+        - choices
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the completion
+        object:
+          type: string
+          description: Object type, always "chat.completion"
+          example: "chat.completion"
+        created:
+          type: integer
+          description: Unix timestamp of when the completion was created
+        model:
+          type: string
+          description: The model used for the completion
+        choices:
+          type: array
+          description: List of completion choices
+          items:
+            $ref: '#/components/schemas/Choice'
+        usage:
+          $ref: '#/components/schemas/Usage'
+
+    Choice:
+      type: object
+      required:
+        - index
+        - message
+        - finish_reason
+      properties:
+        index:
+          type: integer
+          description: Index of the choice in the list
+        message:
+          $ref: '#/components/schemas/ChatMessage'
+        finish_reason:
+          type: string
+          description: The reason the model stopped generating
+          enum:
+            - stop
+            - length
+            - content_filter
+          nullable: true
+
+    Usage:
+      type: object
+      properties:
+        prompt_tokens:
+          type: integer
+          description: Number of tokens in the prompt
+        completion_tokens:
+          type: integer
+          description: Number of tokens in the completion
+        total_tokens:
+          type: integer
+          description: Total number of tokens used
