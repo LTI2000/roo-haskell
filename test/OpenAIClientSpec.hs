@@ -45,11 +45,13 @@ getTestConfig :: IO (Maybe ClientConfig)
 getTestConfig = do
     maybeKey <- lookupEnv "OPENAI_API_KEY"
     maybeUrl <- lookupEnv "OPENAI_BASE_URL"
+    maybeModel <- lookupEnv "OPENAI_MODEL"
     return $ case maybeKey of
         Nothing -> Nothing
         Just apiKey ->
             let baseUrl = fromMaybe "https://api.openai.com" maybeUrl
-            in Just $ mkConfig baseUrl apiKey
+                model = fromMaybe "gpt-3.5-turbo" maybeModel
+            in Just $ mkConfig baseUrl apiKey model
 
 -- | Get the model to use for testing
 getTestModel :: IO String
@@ -61,9 +63,10 @@ spec :: Spec
 spec = describe "OpenAI.Client" $ do
     describe "Configuration" $ do
         it "creates a valid configuration" $ do
-            let config = mkConfig "https://api.openai.com" "test-key"
+            let config = mkConfig "https://api.openai.com" "test-key" "gpt-4"
             configBaseUrl config `shouldBe` "https://api.openai.com"
             configApiKey config `shouldBe` "test-key"
+            configModelName config `shouldBe` "gpt-4"
 
     describe "Message helpers" $ do
         it "creates user messages correctly" $ do
@@ -127,8 +130,8 @@ spec = describe "OpenAI.Client" $ do
                             chatCompletionResponseChoices response `shouldSatisfy` (not . null)
 
         it "returns error for invalid API key" $ do
-            let config = mkConfig "https://api.openai.com" "invalid-key"
             model <- getTestModel
+            let config = mkConfig "https://api.openai.com" "invalid-key" model
             result <- simpleChatCompletion config model "Hello"
             case result of
                 Left err -> err `shouldSatisfy` (\e -> "401" `isInfixOf` e || "Unauthorized" `isInfixOf` e)

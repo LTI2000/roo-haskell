@@ -75,19 +75,21 @@ import OpenAI.Generated
 
 -- | Configuration for the OpenAI client
 data ClientConfig = ClientConfig
-  { configBaseUrl :: String    -- ^ Base URL (e.g., "https://api.openai.com")
-  , configApiKey  :: String    -- ^ API key for authentication
+  { configBaseUrl   :: String    -- ^ Base URL (e.g., "https://api.openai.com")
+  , configApiKey    :: String    -- ^ API key for authentication
+  , configModelName :: String    -- ^ Model name (e.g., "gpt-4", "gpt-3.5-turbo")
   } deriving (Show, Eq)
 
--- | Create a client configuration with the given base URL and API key
+-- | Create a client configuration with the given base URL, API key, and model name
 --
 -- ==== Examples
 --
--- >>> let config = mkConfig "https://api.openai.com" "sk-..."
+-- >>> let config = mkConfig "https://api.openai.com" "sk-..." "gpt-4"
 -- >>> configBaseUrl config
 -- "https://api.openai.com"
 mkConfig :: String  -- ^ Base URL
          -> String  -- ^ API key
+         -> String  -- ^ Model name
          -> ClientConfig
 mkConfig = ClientConfig
 
