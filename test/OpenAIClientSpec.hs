@@ -11,7 +11,7 @@ These tests require a valid API key and endpoint to run.
 
 * @OPENAI_API_KEY@ - Required. The API key for authentication.
 * @OPENAI_BASE_URL@ - Optional. The base URL for the API endpoint.
-  Defaults to 'openAIBaseURL'.
+  Defaults to "https://api.openai.com".
 * @OPENAI_MODEL@ - Optional. The model to use for testing.
   Defaults to "gpt-3.5-turbo".
 
@@ -23,7 +23,7 @@ To run the integration tests:
 OPENAI_API_KEY=sk-... cabal test --test-show-details=direct
 @
 
-For local endpoints like Ollama (use 'ollamaBaseURL'):
+For local endpoints like Ollama:
 
 @
 OPENAI_BASE_URL=http://localhost:11434 OPENAI_MODEL=llama2 cabal test
@@ -48,7 +48,7 @@ getTestConfig = do
     return $ case maybeKey of
         Nothing -> Nothing
         Just apiKey ->
-            let baseUrl = fromMaybe (T.unpack openAIBaseURL) maybeUrl
+            let baseUrl = fromMaybe "https://api.openai.com" maybeUrl
             in Just $ mkConfig baseUrl apiKey
 
 -- | Get the model to use for testing
@@ -61,8 +61,8 @@ spec :: Spec
 spec = describe "OpenAI.Client" $ do
     describe "Configuration" $ do
         it "creates a valid configuration" $ do
-            let config = mkConfig (T.unpack openAIBaseURL) "test-key"
-            configBaseUrl config `shouldBe` T.unpack openAIBaseURL
+            let config = mkConfig "https://api.openai.com" "test-key"
+            configBaseUrl config `shouldBe` "https://api.openai.com"
             configApiKey config `shouldBe` "test-key"
 
     describe "Message helpers" $ do
@@ -127,7 +127,7 @@ spec = describe "OpenAI.Client" $ do
                             chatCompletionResponseChoices response `shouldSatisfy` (not . null)
 
         it "returns error for invalid API key" $ do
-            let config = mkConfig (T.unpack openAIBaseURL) "invalid-key"
+            let config = mkConfig "https://api.openai.com" "invalid-key"
             model <- getTestModel
             result <- simpleChatCompletion config model "Hello"
             case result of

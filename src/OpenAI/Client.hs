@@ -26,17 +26,17 @@ main = do
 
 = Compatibility
 
-This client is designed to work with any OpenAI-compatible endpoint.
-See 'openAIBaseURL', 'ollamaBaseURL', and 'lmStudioBaseURL' for common endpoints.
+This client is designed to work with any OpenAI-compatible endpoint:
+
+* OpenAI API (https://api.openai.com)
+* Ollama (http://localhost:11434)
+* LM Studio (http://localhost:1234)
+* vLLM and other compatible servers
 -}
 module OpenAI.Client
   ( -- * Configuration
     ClientConfig(..)
   , mkConfig
-    -- * Default Base URLs
-  , openAIBaseURL
-  , ollamaBaseURL
-  , lmStudioBaseURL
     -- * Chat Completions
   , chatCompletion
   , simpleChatCompletion
@@ -71,9 +71,6 @@ import OpenAI.Generated
   , CreateChatCompletionResponse(..)
   , mkChatCompletionRequest
   , mkChatMessage
-  , openAIBaseURL
-  , ollamaBaseURL
-  , lmStudioBaseURL
   )
 
 -- | Configuration for the OpenAI client
