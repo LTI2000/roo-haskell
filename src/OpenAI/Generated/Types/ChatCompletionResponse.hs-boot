@@ -1,8 +1,0 @@
-module OpenAI.Generated.Types.ChatCompletionResponse where
-import qualified Data.Aeson
-import qualified OpenAI.Generated.Common
-data ChatCompletionResponse
-instance Show ChatCompletionResponse
-instance Eq ChatCompletionResponse
-instance Data.Aeson.FromJSON ChatCompletionResponse
-instance Data.Aeson.ToJSON ChatCompletionResponse
