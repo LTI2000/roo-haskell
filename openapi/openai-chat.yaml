@@ -16,7 +16,7 @@ servers:
     description: LM Studio (local)
 
 paths:
-  /v1/chat/completions:
+  /chat/completions:
     post:
       operationId: createChatCompletion
       summary: Create a chat completion
