@@ -11,7 +11,7 @@ These tests require a valid API key and endpoint to run.
 
 * @OPENAI_API_KEY@ - Required. The API key for authentication.
 * @OPENAI_BASE_URL@ - Optional. The base URL for the API endpoint.
-  Defaults to "https://api.openai.com".
+  Defaults to "https://api.openai.com/v1".
 * @OPENAI_MODEL@ - Optional. The model to use for testing.
   Defaults to "gpt-3.5-turbo".
 
@@ -49,7 +49,7 @@ getTestConfig = do
     return $ case maybeKey of
         Nothing -> Nothing
         Just apiKey ->
-            let baseUrl = fromMaybe "https://api.openai.com" maybeUrl
+            let baseUrl = fromMaybe "https://api.openai.com/v1" maybeUrl
                 model = fromMaybe "gpt-3.5-turbo" maybeModel
             in Just $ mkConfig baseUrl apiKey model
 
@@ -63,8 +63,8 @@ spec :: Spec
 spec = describe "OpenAI.Client" $ do
     describe "Configuration" $ do
         it "creates a valid configuration" $ do
-            let config = mkConfig "https://api.openai.com" "test-key" "gpt-4"
-            configBaseUrl config `shouldBe` "https://api.openai.com"
+            let config = mkConfig "https://api.openai.com/v1" "test-key" "gpt-4"
+            configBaseUrl config `shouldBe` "https://api.openai.com/v1"
             configApiKey config `shouldBe` "test-key"
             configModelName config `shouldBe` "gpt-4"
 
@@ -131,7 +131,7 @@ spec = describe "OpenAI.Client" $ do
 
         it "returns error for invalid API key" $ do
             model <- getTestModel
-            let config = mkConfig "https://api.openai.com" "invalid-key" model
+            let config = mkConfig "https://api.openai.com/v1" "invalid-key" model
             result <- simpleChatCompletion config model "Hello"
             case result of
                 Left err -> err `shouldSatisfy` (\e -> "401" `isInfixOf` e || "Unauthorized" `isInfixOf` e)
