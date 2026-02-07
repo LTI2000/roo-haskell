@@ -20,3 +20,11 @@ rm -rf src/OpenAI/Generated*
 cp -r tmp/src .
 
 rm -rf tmp
+
+# Apply hlint refactoring to each generated Haskell file
+echo "Applying hlint refactoring to generated files..."
+find src/OpenAI/Generated -name "*.hs" -type f | while read -r file; do
+  echo "  Refactoring: $file"
+  hlint --refactor --refactor-options="--inplace" "$file" 2>/dev/null || true
+done
+echo "HLint refactoring complete."
