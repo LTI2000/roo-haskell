@@ -21,18 +21,18 @@ library
     exposed-modules:  
         ListUtils
         OpenAI.Client
-        OpenAI.Generated
-        OpenAI.Generated.Common
-        OpenAI.Generated.Configuration
-        OpenAI.Generated.SecuritySchemes
-        OpenAI.Generated.TypeAlias
-        OpenAI.Generated.Types
-        OpenAI.Generated.Operations.CreateChatCompletion
-        OpenAI.Generated.Types.ChatCompletionRequest
-        OpenAI.Generated.Types.ChatCompletionResponse
-        OpenAI.Generated.Types.ChatMessage
-        OpenAI.Generated.Types.Choice
-        OpenAI.Generated.Types.Usage
+        OpenAI.Client.Generated
+        OpenAI.Client.Generated.Common
+        OpenAI.Client.Generated.Configuration
+        OpenAI.Client.Generated.SecuritySchemes
+        OpenAI.Client.Generated.TypeAlias
+        OpenAI.Client.Generated.Types
+        OpenAI.Client.Generated.Operations.CreateChatCompletion
+        OpenAI.Client.Generated.Types.ChatCompletionRequest
+        OpenAI.Client.Generated.Types.ChatCompletionResponse
+        OpenAI.Client.Generated.Types.ChatMessage
+        OpenAI.Client.Generated.Types.Choice
+        OpenAI.Client.Generated.Types.Usage
     build-depends:    
         base >= 4.7 && < 5,
         -- JSON serialization

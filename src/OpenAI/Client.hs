@@ -58,7 +58,7 @@ import qualified Data.List.NonEmpty as NE
 import qualified Data.Text as T
 import qualified Network.HTTP.Client as HTTP
 
-import OpenAI.Generated
+import OpenAI.Client.Generated
   ( ChatMessage(..)
   , ChatMessageRole(..)
   , ChatCompletionRequest(..)

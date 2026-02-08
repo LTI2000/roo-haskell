@@ -1,4 +1,4 @@
 /.env
 /dist-newstyle/
-/src/OpenAI/Generated.hs
-/src/OpenAI/Generated/
+/src/OpenAI/Client/Generated.hs
+/src/OpenAI/Client/Generated/
