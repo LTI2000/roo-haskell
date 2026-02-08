@@ -1,3 +1,7 @@
+#!/bin/bash
+
+set -e
+
 rm -rf tmp
 
 openapi3-code-generator-exe                \
@@ -25,6 +29,6 @@ rm -rf tmp
 echo "Applying hlint refactoring to generated files..."
 find src/OpenAI/Generated -name "*.hs" -type f | while read -r file; do
   echo "  Refactoring: $file"
-  hlint --refactor --refactor-options="--inplace" "$file" 2>/dev/null || true
+  hlint --refactor --refactor-options="--inplace" "$file"
 done
 echo "HLint refactoring complete."
