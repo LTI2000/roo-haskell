@@ -117,17 +117,43 @@ spec = describe "OpenAI.Client" $ do
                 Nothing -> pendingWith "OPENAI_API_KEY environment variable not set"
                 Just config -> do
                     model <- getTestModel
-                    let messages = 
-                            [ mkSystemMessage "You are a calculator. Only respond with numbers."
+                    -- First turn: ask for a number
+                    let messages1 =
+                            [ mkSystemMessage "You are a calculator. Only respond with numbers, no words."
                             , mkUserMessage "What is 2 + 2?"
                             ]
-                        request = mkChatRequest model messages
-                    result <- chatCompletion config request
-                    case result of
-                        Left err -> expectationFailure $ "API call failed: " ++ err
-                        Right response -> do
+                        request1 = mkChatRequest model messages1
+                    result1 <- chatCompletion config request1
+                    case result1 of
+                        Left err -> expectationFailure $ "First API call failed: " ++ err
+                        Right response1 -> do
                             -- Should have at least one choice
-                            chatCompletionResponseChoices response `shouldSatisfy` (not . null)
+                            let choices1 = chatCompletionResponseChoices response1
+                            choices1 `shouldSatisfy` (not . null)
+                            -- Extract the assistant's response
+                            let assistantMsg1 = choiceMessage (head choices1)
+                                assistantContent1 = T.unpack $ chatMessageContent assistantMsg1
+                            -- First response should contain "4"
+                            assistantContent1 `shouldSatisfy` ("4" `isInfixOf`)
+                            
+                            -- Second turn: continue the conversation
+                            let messages2 = messages1 ++
+                                    [ assistantMsg1
+                                    , mkUserMessage "Now multiply that by 3"
+                                    ]
+                                request2 = mkChatRequest model messages2
+                            result2 <- chatCompletion config request2
+                            case result2 of
+                                Left err -> expectationFailure $ "Second API call failed: " ++ err
+                                Right response2 -> do
+                                    -- Should have at least one choice
+                                    let choices2 = chatCompletionResponseChoices response2
+                                    choices2 `shouldSatisfy` (not . null)
+                                    -- Extract the assistant's response
+                                    let assistantMsg2 = choiceMessage (head choices2)
+                                        assistantContent2 = T.unpack $ chatMessageContent assistantMsg2
+                                    -- Second response should contain "12" (4 * 3)
+                                    assistantContent2 `shouldSatisfy` ("12" `isInfixOf`)
 
         it "returns error for invalid API key" $ do
             model <- getTestModel
